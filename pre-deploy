@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$(dirname $0)/../common/functions"
+
+APP="$1"
+COUCHDB_FLAG_PERSISTENCE_FILE="$DOKKU_ROOT/$APP/COUCHDB"
+COUCHDB_CONTAINER_NAME="couchdb-$APP"
+
+if [[ -f $COUCHDB_FLAG_PERSISTENCE_FILE ]]; then
+  IMAGE=$(docker images | grep "tutum/couchdb" | awk '{print $3}') || true
+  if [[ -z $IMAGE ]]; then
+    dokku_log_fail "CouchDB image not found! Did you run 'dokku plugins-install'?"
+  fi
+  ID=$(docker ps | grep "$COUCHDB_CONTAINER_NAME" | awk '{print $1}') || true
+  if [[ -n $ID ]]; then
+    dokku_log_verbose "CouchDB container already running: $COUCHDB_CONTAINER_NAME"
+    exit 0
+  fi
+  ID=$(docker ps -f status=exited | grep "$COUCHDB_CONTAINER_NAME" | awk '{print $1}') || true
+  if [[ -n $ID ]]; then
+    ID=$(docker rm "$ID")
+    dokku_log_info1 "Removed stale CouchDB container $ID"
+  fi
+  HOST_DIR="$DOKKU_ROOT/.couchdb-mc/volume-$APP"
+  if [[ -d $HOST_DIR ]]; then
+    dokku_log_info1 "Reusing volume-$APP volume"
+  else
+    dokku_log_info1 "Creating new volume"
+    mkdir -p "$HOST_DIR"
+  fi
+  VOLUME="$HOST_DIR:/var/lib/couchdb"
+  dokku_log_info1 "Starting CouchDB container..."
+  COUCHDB_PASS=$(cat "$COUCHDB_FLAG_PERSISTENCE_FILE")
+  ID=$(docker run -v "$VOLUME" --name "$COUCHDB_CONTAINER_NAME" -e COUCHDB_PASS="$COUCHDB_PASS" -d "$IMAGE")
+  dokku_log_info2 "CouchDB started:"
+  dokku_log_verbose "Application: $APP"
+  dokku_log_verbose "CouchDB: $COUCHDB_CONTAINER_NAME"
+fi
