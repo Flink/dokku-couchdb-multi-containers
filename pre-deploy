@@ -7,7 +7,7 @@ COUCHDB_FLAG_PERSISTENCE_FILE="$DOKKU_ROOT/$APP/COUCHDB"
 COUCHDB_CONTAINER_NAME="couchdb-$APP"
 
 if [[ -f $COUCHDB_FLAG_PERSISTENCE_FILE ]]; then
-  IMAGE=$(docker images | grep "tutum/couchdb" | awk '{print $3}') || true
+  IMAGE=$(docker images | grep "tutum/couchdb" | awk '{print $1}') || true
   if [[ -z $IMAGE ]]; then
     dokku_log_fail "CouchDB image not found! Did you run 'dokku plugins-install'?"
   fi
