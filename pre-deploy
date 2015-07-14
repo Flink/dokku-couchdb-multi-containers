@@ -7,7 +7,7 @@ COUCHDB_FLAG_PERSISTENCE_FILE="$DOKKU_ROOT/$APP/COUCHDB"
 COUCHDB_CONTAINER_NAME="couchdb-$APP"
 
 if [[ -f $COUCHDB_FLAG_PERSISTENCE_FILE ]]; then
-  IMAGE=$(docker images | grep "tutum/couchdb" | awk '{print $1}') || true
+  IMAGE=$(docker images | grep "frodenas/couchdb" | awk '{print $1}') || true
   if [[ -z $IMAGE ]]; then
     dokku_log_fail "CouchDB image not found! Did you run 'dokku plugins-install'?"
   fi
@@ -28,10 +28,10 @@ if [[ -f $COUCHDB_FLAG_PERSISTENCE_FILE ]]; then
     dokku_log_info1 "Creating new volume"
     mkdir -p "$HOST_DIR"
   fi
-  VOLUME="$HOST_DIR:/var/lib/couchdb"
+  VOLUME="$HOST_DIR:/data"
   dokku_log_info1 "Starting CouchDB container..."
   COUCHDB_PASS=$(cat "$COUCHDB_FLAG_PERSISTENCE_FILE")
-  ID=$(docker run -v "$VOLUME" --name "$COUCHDB_CONTAINER_NAME" -e COUCHDB_PASS="$COUCHDB_PASS" -d "$IMAGE")
+  ID=$(docker run -v "$VOLUME" --name "$COUCHDB_CONTAINER_NAME" -e COUCHDB_USERNAME=admin -e COUCHDB_PASSWORD="$COUCHDB_PASS" -d "$IMAGE")
   dokku_log_info2 "CouchDB started:"
   dokku_log_verbose "Application: $APP"
   dokku_log_verbose "CouchDB: $COUCHDB_CONTAINER_NAME"
