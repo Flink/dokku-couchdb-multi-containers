@@ -23,7 +23,7 @@ case "$1" in
     COUCHDB_PASS=$(openssl rand -hex 32)
     echo "$COUCHDB_PASS" > "$COUCHDB_FLAG_PERSISTENCE_FILE"
     chmod 600 "$COUCHDB_FLAG_PERSISTENCE_FILE"
-    dokku config:set-norestart "$APP" COUCH_URL="http://admin:$COUCHDB_PASS@couchdb:$COUCHDB_PORT/" COUCH_USER=admin COUCH_PASS="$COUCHDB_PASS" COUCH_PORT="$COUCHDB_PORT" COUCH_HOST=couchdb
+    dokku config:set --no-restart "$APP" COUCH_URL="http://admin:$COUCHDB_PASS@couchdb:$COUCHDB_PORT/" COUCH_USER=admin COUCH_PASS="$COUCHDB_PASS" COUCH_PORT="$COUCHDB_PORT" COUCH_HOST=couchdb
     dokku docker-options:add "$APP" build,run,deploy "--link $COUCHDB_CONTAINER_NAME:couchdb"
     dokku_log_info2 "CouchDB enabled for $APP"
     dokku_log_verbose "CouchDB will be started on next build / deploy"
@@ -44,7 +44,7 @@ case "$1" in
     if [[ -d $COUCHDB_VOLUME_DIR ]]; then
         rm -rf "$COUCHDB_VOLUME_DIR"
     fi
-    dokku config:unset-norestart "$APP" COUCH_URL COUCH_USER COUCH_PASS COUCH_PORT COUCH_HOST
+    dokku config:unset --no-restart "$APP" COUCH_URL COUCH_USER COUCH_PASS COUCH_PORT COUCH_HOST
     dokku docker-options:remove "$APP" build,run,deploy "--link $COUCHDB_CONTAINER_NAME:couchdb"
     dokku_log_info2 "CouchDB instance / volume destroyed:"
     dokku_log_verbose "Application: $APP"
