@@ -52,8 +52,8 @@ case "$1" in
 
   help)
     cat && cat<<EOF
-    couchdb:enable <app>                            Enable CouchDB for an app for next build/deploy
-    couchdb:destroy <app>                           Destroy CouchDB container and volume of an app
+    couchdb:enable <app>, Enable CouchDB for an app for next build/deploy
+    couchdb:destroy <app>, Destroy CouchDB container and volume of an app
 EOF
     ;;
 
