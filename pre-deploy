@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
-source "$PLUGIN_RATH/common/functions"
+source "$PLUGIN_PATH/common/functions"
 
 APP="$1"
 COUCHDB_FLAG_PERSISTENCE_FILE="$DOKKU_ROOT/$APP/COUCHDB"
