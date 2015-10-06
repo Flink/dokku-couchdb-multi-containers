@@ -2,13 +2,17 @@
 
 dokku-couchdb-multi-containers is a plugin for [dokku][dokku] that provides a CouchDB container per application. It is inspired by the [Redis plugin][redis_plugin] from [Michael Yoo][sekjun9878].
 
-This version is compatible with dokku 0.3.17+. (it requires the `docker-options` plugin)
+This version is compatible with dokku 0.3.17+ and 0.4+.
 
 ## Installation
 
-```
-git clone https://github.com/Flink/dokku-couchdb-multi-containers /var/lib/dokku/plugins/couchdb-mc
-dokku plugins-install
+```shell
+# dokku 0.3.x
+$ git clone https://github.com/Flink/dokku-couchdb-multi-containers /var/lib/dokku/plugins/couchdb-mc
+$ dokku plugins-install
+
+# dokku 0.4+
+$ dokku plugin:install https://github.com/Flink/dokku-couchdb-multi-containers.git
 ```
 
 ## Commands
