@@ -1,6 +1,6 @@
 # (DEPRECATED) dokku-couchdb-multi-containers
 
-DEPRECATED, USE OFFICIAL COUCHDB PLUGIN INSTEAD
+DEPRECATED, USE OFFICIAL [COUCHDB PLUGIN](https://github.com/dokku/dokku-couchdb) INSTEAD
 
 dokku-couchdb-multi-containers is a plugin for [dokku][dokku] that provides a CouchDB container per application. It is inspired by the [Redis plugin][redis_plugin] from [Michael Yoo][sekjun9878].
 
